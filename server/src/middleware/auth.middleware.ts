@@ -11,7 +11,7 @@ import User from "../models/user.model";
  * @returns Promise<void> from async function
  */
 
-export const protectRoute = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const protectRoute = async (req: any, res: Response, next: NextFunction): Promise<void> => {
   try {
     const token = req.cookies.jwt;
 
@@ -27,7 +27,7 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    const user = await User.findById(decoded.userID as JwtPayload).select("-password");
+    const user = await User.findById(decoded.userId as JwtPayload).select("-password");
 
     if (!user) {
       res.status(401).json({ message: "User not found" });

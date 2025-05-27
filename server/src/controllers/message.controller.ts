@@ -3,7 +3,7 @@ import User from '../models/user.model';
 import Message from '../models/message.model';
 import cloudinary from '../lib/cloudinary';
 
-export const getUsersForSideBar = async (req: Request, res: Response): Promise<void> => {
+export const getUsersForSideBar = async (req: any, res: Response): Promise<void> => {
   try {
     const loggedinUserId = req.user._id;
     const filteredUsers = await User.find({_id: {$ne:loggedinUserId}}).select("-password");
@@ -33,7 +33,7 @@ export const getMessages = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const sendMessage = async (req: Request, res:Response) => {
+export const sendMessage = async (req: any, res:Response) => {
   try {
     const { text, image } = req.body;
     const { id: chatroomId } = req.params;

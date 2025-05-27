@@ -11,13 +11,20 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ message: "All fields are required" });
       return;
     }
-    if (password.length < 6) {
-      res.status(400).json({ message: "Password must be at least 6 characters" });
+
+    const validUsernameMessage = checkValidUsername(username);
+    if (validUsernameMessage !== "") {
+      res.status(400).json({ message: validUsernameMessage});
       return;
     }
     const user = await User.findOne({username});
     if (user) {
       res.status(400).json({ message: "User already exists" });
+      return;
+    }
+
+    if (password.length < 6) {
+      res.status(400).json({ message: "Password must be at least 6 characters" });
       return;
     }
 
@@ -49,8 +56,8 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const {username, password} = req.body;
   try {
+    const {username, password} = req.body;
     const user = await User.findOne({username});
 
     if (!user) {
@@ -92,16 +99,26 @@ export const logout = (req: Request, res: Response): void => {
 
 export const updateProfile = async (req: any, res: Response): Promise<void> => {
   try {
-    const {profilePic} = req.body;
-    const userId = req.user._id
+    const { username, profilePic } = req.body;
+    const userId = req.user._id;
 
-    if (!profilePic) {
-      res.status(400).json({ message: "Profile pic is required" });
+    if (!username && !profilePic) {
+      res.status(400).json({ message: "No changes are being made" });
       return;
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
-    const updatedUser = await User.findByIdAndUpdate(userId, {profilePic:uploadResponse.secure_url}, {new:true});
+    const updateFields: Record<string, any> = {};
+
+    if (username) {
+      updateFields.username = username;
+    }
+
+    if (profilePic) {
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      updateFields.profilePic = uploadResponse.secure_url;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true }).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error: unknown) {
@@ -119,4 +136,24 @@ export const checkAuth = (req: any, res: Response): void => {
     console.log("Error in checkAuth controller", err.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
+}
+
+export function checkValidUsername(username: string): string {
+  if (!username) {
+    return "Username is required.";
+  }
+
+  if (username.length < 3 || username.length > 12) {
+    return "Username must be between 3 and 12 characters.";
+  }
+
+  if (!/^[a-zA-Z_]+$/.test(username)) {
+    return "Username can only contain letters and underscores.";
+  }
+
+  if (!/[a-zA-Z]/.test(username)) {
+    return "Username must contain at least one letter.";
+  }
+
+  return "";
 }
