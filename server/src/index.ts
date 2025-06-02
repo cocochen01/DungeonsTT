@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './routes/auth.route';
+import chatroomRoutes from './routes/chatroom.route';
 import messageRoutes from './routes/message.route';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
+app.use("/api/chatroom", chatroomRoutes);
 app.use("/api/message", messageRoutes);
 
 app.listen(PORT, () => {
