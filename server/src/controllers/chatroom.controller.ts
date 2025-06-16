@@ -74,16 +74,9 @@ export const addUserToChatroom = async (req: any, res: Response): Promise<void> 
     const chatroomId = req.params.id;
     const { userIdToAdd } = req.body;
 
-    const chatroom = await Chatroom.findById(chatroomId);
-    // Check if chatroom exists
-    if (!chatroom) {
-      res.status(404).json({ message: "Chatroom not found" });
-      return;
-    }
-
-    // Check if the requesting user is a member of chatroom
-    if (!chatroom.members.includes(requesterId.toString())) {
-      res.status(403).json({ message: "You are not a member of this chatroom" });
+    const { chatroom, error, status } = await validateChatroomAccess(chatroomId, requesterId);
+    if (error || !chatroom) {
+      res.status(status!).json({ message: error });
       return;
     }
 
@@ -105,6 +98,51 @@ export const addUserToChatroom = async (req: any, res: Response): Promise<void> 
 
     res.status(200).json({ message: "User added to chatroom", chatroom });
   } catch (error) {
-    
+    const err = error as Error;
+    console.error("Error addUserToChatroom:", err.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export const updateChatroom = async (req: any, res: Response): Promise<void> => {
+  try {
+    const requesterId = req.user._id;
+    const chatroomId = req.params.id;
+    const { newChatroomName } = req.body;
+
+    if (!newChatroomName) {
+      res.status(400).json({ message: "Chatroom name is required" });
+      return;
+    }
+
+    const { chatroom, error, status } = await validateChatroomAccess(chatroomId, requesterId);
+    if (error || !chatroom) {
+      res.status(status!).json({ message: error });
+      return;
+    }
+
+    chatroom.name = newChatroomName;
+    await chatroom.save();
+
+    res.status(200).json({ message: "Chatroom name updated", chatroom });
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error updateChatroom:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
+
+const validateChatroomAccess = async (chatroomId: string, requesterId: any) => {
+  const chatroom = await Chatroom.findById(chatroomId);
+  if (!chatroom) {
+    return { error: "Chatroom not found", status: 404 };
+  }
+
+  if (!chatroom.members.includes(requesterId.toString())) {
+    return { error: "You are not a member of this chatroom", status: 403 };
+  }
+
+  return { chatroom };
+};

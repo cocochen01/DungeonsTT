@@ -1,5 +1,11 @@
 import express from "express";
-import { addUserToChatroom, createChatroom, getChatroom, getUserChatrooms } from "../controllers/chatroom.controller";
+import {
+  addUserToChatroom,
+  createChatroom,
+  getChatroom,
+  getUserChatrooms,
+  updateChatroom
+} from "../controllers/chatroom.controller";
 import { protectRoute } from "../middleware/auth.middleware";
 
 const router = express.Router();
@@ -9,6 +15,9 @@ router.get("/mychatrooms", protectRoute, getUserChatrooms);
 
 // Add a user to a chatroom
 router.post("/:id/adduser", protectRoute, addUserToChatroom);
+
+// Update chatroom
+router.post("/:id/updatechatroom", protectRoute, updateChatroom);
 
 // Get the chatroom from chatroomId
 router.get("/:id", protectRoute, getChatroom);
