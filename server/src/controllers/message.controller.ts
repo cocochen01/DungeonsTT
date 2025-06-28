@@ -39,6 +39,11 @@ export const sendMessage = async (req: any, res:Response) => {
     const { id: chatroomId } = req.params;
     const senderId = req.user._id;
 
+    if (!text && !image) {
+      res.status(400).json({ message: "Message must contain text or image." });
+      return;
+    }
+
     let imageURL;
     if (image) {
       const uploadResponse = await cloudinary.uploader.upload(image);
@@ -48,8 +53,8 @@ export const sendMessage = async (req: any, res:Response) => {
     const newMessage = new Message({
       senderId,
       chatroomId,
-      text,
-      image: imageURL,
+      ...(text && { text }),
+      ...(imageURL && { image: imageURL }),
     });
 
     await newMessage.save();
