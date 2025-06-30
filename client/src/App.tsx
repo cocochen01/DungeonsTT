@@ -1,27 +1,27 @@
-import { useEffect } from 'react';
-import { socket } from './socket';
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
+import SignUpPage from "./pages/SignUpPage";
+import { Routes, Route } from "react-router-dom";
 
-function App() {
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log(socket.connected); // true
-    });
-
-    socket.on("disconnect", () => {
-      console.log(socket.connected); // false
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
+const App = () => {
   return (
     <div>
-      <h1>VTT Clone</h1>
-      <p>Connected to server via Socket.IO</p>
+
+    <Navbar />
+
+    <Routes>
+      <Route path="/" element={<HomePage/>} />
+      <Route path="/signup" element={<SignUpPage/>} />
+      <Route path="/login" element={<LoginPage/>} />
+      <Route path="/settings" element={<SettingsPage/>} />
+      <Route path="/profile" element={<ProfilePage/>} />
+
+    </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
