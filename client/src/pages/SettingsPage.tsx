@@ -1,7 +1,8 @@
 
+
 const SettingsPage = () => {
   return (
-    <div>SettingsPage</div>
+    <div>SignUpPage</div>
   )
 }
 
