@@ -3,26 +3,41 @@ import User from '../models/user.model';
 import bcrypt from "bcrypt";
 import { generateToken } from '../lib/util';
 import cloudinary from '../lib/cloudinary';
+import validator from "validator";
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
   try {
-    if (!username || !password) {
+    if (!username || !email || !password) {
       res.status(400).json({ message: "All fields are required" });
       return;
     }
 
+    // Check username
     const validUsernameMessage = checkValidUsername(username);
     if (validUsernameMessage !== "") {
-      res.status(400).json({ message: validUsernameMessage});
+      res.status(400).json({ message: validUsernameMessage });
       return;
     }
-    const user = await User.findOne({username});
-    if (user) {
-      res.status(400).json({ message: "User already exists" });
+    const checkUsername = await User.findOne({username});
+    if (checkUsername) {
+      res.status(400).json({ message: "Username is already in use" });
       return;
     }
 
+    // Check email
+    const validEmailMessage = checkValidEmail(email);
+    if (validEmailMessage !== "") {
+      res.status(400).json({ message: validEmailMessage });
+      return;
+    }
+    const checkEmail = await User.findOne({email});
+    if (checkEmail) {
+      res.status(400).json({ message: "Email is already in use" });
+      return;
+    }
+
+    // Check password
     if (password.length < 6) {
       res.status(400).json({ message: "Password must be at least 6 characters" });
       return;
@@ -33,6 +48,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
     const newUser = new User({
       username,
+      email,
       password: hashedPassword,
     })
 
@@ -43,6 +59,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       res.status(201).json({
         _id: newUser._id,
         username: newUser.username,
+        email: newUser.email,
       })
 
     } else {
@@ -61,13 +78,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({username});
 
     if (!user) {
-      res.status(400).json({ message: "Invlaid credentials" });
+      res.status(400).json({ message: "Invalid credentials" });
       return;
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      res.status(400).json({ message: "Invlaid credentials" });
+      res.status(400).json({ message: "Invalid credentials" });
       return;
     }
 
@@ -165,5 +182,16 @@ export function checkValidUsername(username: string): string {
     return "Username must contain at least one letter.";
   }
 
+  return "";
+}
+
+export function checkValidEmail(email: string): string {
+  if (!email) {
+    return "Email is required.";
+  }
+
+  if (!validator.isEmail(email)) {
+    return "Invalid email address";
+  }
   return "";
 }
