@@ -110,6 +110,16 @@ export const updateProfile = async (req: any, res: Response): Promise<void> => {
     const updateFields: Record<string, any> = {};
 
     if (username) {
+      const validUsernameMessage = checkValidUsername(username);
+      if (validUsernameMessage !== "") {
+        res.status(400).json({ message: validUsernameMessage});
+        return;
+      }
+      const user = await User.findOne({username});
+      if (user) {
+        res.status(400).json({ message: "User already exists" });
+        return;
+      }
       updateFields.username = username;
     }
 
@@ -147,8 +157,8 @@ export function checkValidUsername(username: string): string {
     return "Username must be between 3 and 12 characters.";
   }
 
-  if (!/^[a-zA-Z_]+$/.test(username)) {
-    return "Username can only contain letters and underscores.";
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    return "Username can only contain letters, numbers, and underscores.";
   }
 
   if (!/[a-zA-Z]/.test(username)) {
