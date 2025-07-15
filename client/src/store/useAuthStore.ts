@@ -13,8 +13,8 @@ interface AuthStore {
 
   checkAuth: () => Promise<void>;
   signup: (data: any) => Promise<void>;
-  logout: () => Promise<void>;
   login: (data: any) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -48,6 +48,20 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isSigningUp: false});
     }
   },
+  login: async (data) => {
+    set({ isLoggingIn: true });
+    try {
+      const res = await axiosInstance.post("/auth/login", data);
+      set({ authUser: res.data });
+      toast.success("Logged in successfully");
+
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.log(error.response.data.message);
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
   logout: async () => {
     try {
       await axiosInstance.post("auth/logout");
@@ -57,17 +71,4 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.error(error.response.data.message);
     }
   },
-  login: async (data) => {
-    set({ isLoggingIn: true });
-    try {
-      const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data });
-      toast.success("Logged in sucessfully");
-    } catch (error: any) {
-      toast.error(error.response.data.message);
-      console.log(error.response.data.message);
-    } finally {
-      set({ isLoggingIn: false});
-    }
-  }
 }));

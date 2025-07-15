@@ -47,7 +47,7 @@ const LoginPage = () => {
                   <User className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
-                  type="email"
+                  type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="yourusername01"
                   value={formData.username}
