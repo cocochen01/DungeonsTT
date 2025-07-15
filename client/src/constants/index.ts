@@ -32,3 +32,5 @@ export const THEMES = [
   "nord",
   "sunset",
 ];
+
+export type Theme = typeof THEMES[number];
