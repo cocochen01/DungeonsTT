@@ -3,7 +3,15 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 // Custom hook for managing state
-
+interface SignUpData {
+  username: string;
+  email: string;
+  password: string;
+}
+interface LoginData {
+  username: string;
+  password: string;
+}
 interface AuthStore {
   authUser: any | null;
   isSigningUp: boolean;
@@ -12,9 +20,10 @@ interface AuthStore {
   isCheckingAuth: boolean;
 
   checkAuth: () => Promise<void>;
-  signup: (data: any) => Promise<void>;
-  login: (data: any) => Promise<void>;
+  signup: (data: SignUpData) => Promise<void>;
+  login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (data: any) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -70,5 +79,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
+  },
+  updateProfile: async (data) =>{
+
   },
 }));
