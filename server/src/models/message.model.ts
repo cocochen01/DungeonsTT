@@ -9,7 +9,7 @@ const messageSchema = new mongoose.Schema(
     },
     chatroomId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Chatroom",
       required: true,
     },
     text: {
