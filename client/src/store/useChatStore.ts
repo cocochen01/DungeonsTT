@@ -2,41 +2,43 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import type { Message } from "../types/message";
-import type { User } from "../types/user";
 import type { Chatroom } from "../types/chatroom";
 
 interface ChatStore {
   messages: Message[];
-  users: User[];
+  chatrooms: Chatroom[];
   selectedChatroom: Chatroom | null;
-  isUsersLoading: boolean;
+  isChatroomsLoading: boolean;
   isMessagesLoading: boolean;
+
+  getChatrooms: () => Promise<void>;
+  getMessages: (userId: string) => Promise<void>;
+  setSelectedChatroom: (selectedChatroom: Chatroom) => Promise<void>;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
-  users: [],
+  chatrooms: [],
   selectedChatroom: null,
-  isUsersLoading: false,
+  isChatroomsLoading: false,
   isMessagesLoading: false,
 
-  getUsers: async () => {
-    set({ isUsersLoading: true });
+  getChatrooms: async () => {
+    set({ isChatroomsLoading: true });
     try {
-      const res = await axiosInstance.get("/message/users");
-      set({ users: res.data });
+      const res = await axiosInstance.get("/chatroom/mychatrooms");
+      set({ chatrooms: res.data });
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in GetUsers: ", error.response.data.message);
+      console.log("Error in GetChatrooms: ", error.response.data.message);
     } finally {
-      set({ isUsersLoading: false });
+      set({ isChatroomsLoading: false });
     }
   },
-
-  getMessages: async (userId: string) => {
+  getMessages: async (chatroomId) => {
     set({ isMessagesLoading: true });
     try {
-      const res = await axiosInstance.get(`/message/${userId}`);
+      const res = await axiosInstance.get(`/message/${chatroomId}`);
       set({ messages: res.data });
     } catch (error: any) {
       toast.error(error.response.data.message);
@@ -45,4 +47,5 @@ export const useChatStore = create<ChatStore>((set) => ({
       set({ isMessagesLoading: false });
     }
   },
+  setSelectedChatroom: async (selectedChatroom) => set ({ selectedChatroom }),
 }));
