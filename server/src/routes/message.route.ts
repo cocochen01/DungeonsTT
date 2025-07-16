@@ -4,9 +4,12 @@ import { getMessages, getUsersForSideBar, sendMessage } from "../controllers/mes
 
 const router = express.Router();
 
-router.get("/user", protectRoute, getUsersForSideBar);
+//router.get("/user", protectRoute, getUsersForSideBar);
+
+// Get all messages from chatroomId
 router.get("/:id", protectRoute, getMessages);
 
+// Send a message to chatroom of chatroomId
 router.post("/send/:id", protectRoute, sendMessage)
 
 export default router;
