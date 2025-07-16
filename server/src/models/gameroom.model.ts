@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const chatroomSchema = new mongoose.Schema(
+const gameroomSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,6 +23,6 @@ const chatroomSchema = new mongoose.Schema(
   }
 );
 
-const Chatroom = mongoose.model("Chatroom", chatroomSchema);
+const Gameroom = mongoose.model("Gameroom", gameroomSchema);
 
-export default Chatroom;
+export default Gameroom;

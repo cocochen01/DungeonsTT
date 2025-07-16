@@ -1,15 +1,15 @@
 import { useEffect } from "react";
-import { useChatStore } from "../store/useChatStore";
+import { useGameStore } from "../store/useGameStore";
 
 const LeftSidebar = () => {
-  const { getChatrooms, chatrooms, selectedChatroom, setSelectedChatroom, isChatroomsLoading } = useChatStore();
+  const { getGamerooms, gamerooms, selectedGameroom, setSelectedGameroom, isGameroomsLoading } = useGameStore();
 
-  const activeChatrooms = [];
+  const activeGamerooms = [];
 
   useEffect(() => {
-    getChatrooms();
-  }, [getChatrooms]);
-  
+    getGamerooms();
+  }, [getGamerooms]);
+
   return (
     <div>LeftSidebar</div>
   )

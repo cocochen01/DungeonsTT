@@ -2,11 +2,11 @@ import LeftSidebar from "../components/LeftSidebar";
 import NoRoomSelected from "../components/NoRoomSelected";
 import RightSidebar from "../components/RightSidebar";
 import Tabletop from "../components/Tabletop";
-import { useChatStore } from "../store/useChatStore";
+import { useGameStore } from "../store/useGameStore";
 
 
 const HomePage = () => {
-  const { selectedChatroom } = useChatStore();
+  const { selectedGameroom } = useGameStore();
 
   return (
     <div className="h-screen bg-base-200">
@@ -21,7 +21,7 @@ const HomePage = () => {
 
             {/* CENTER: Tabletop */}
             <div className="w-3/5 bg-base-200">
-              {selectedChatroom ? <Tabletop /> : <NoRoomSelected />}
+              {selectedGameroom ? <Tabletop /> : <NoRoomSelected />}
             </div>  
 
             {/* RIGHT: other stuff */}

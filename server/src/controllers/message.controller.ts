@@ -18,10 +18,10 @@ export const getUsersForSideBar = async (req: any, res: Response): Promise<void>
 
 export const getMessages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {chatroomId} = req.params;
+    const {gameroomId} = req.params;
     //const myId = req.user._id;
 
-    const messages = await Message.find({ chatroomId })
+    const messages = await Message.find({ gameroomId: gameroomId })
       .populate("senderId", "username profilePic")
       .sort({ createdAt: 1 });
 
@@ -36,7 +36,7 @@ export const getMessages = async (req: Request, res: Response): Promise<void> =>
 export const sendMessage = async (req: any, res:Response) => {
   try {
     const { text, image } = req.body;
-    const { id: chatroomId } = req.params;
+    const { id: gameroomId } = req.params;
     const senderId = req.user._id;
 
     if (!text && !image) {
@@ -52,7 +52,7 @@ export const sendMessage = async (req: any, res:Response) => {
 
     const newMessage = new Message({
       senderId,
-      chatroomId,
+      gameroomId,
       ...(text && { text }),
       ...(imageURL && { image: imageURL }),
     });
