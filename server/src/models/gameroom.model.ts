@@ -17,6 +17,10 @@ const gameroomSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    icon: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
