@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import type { User } from "../types/user";
 
 // Custom hook for managing state
 interface SignUpData {
@@ -12,8 +13,9 @@ interface LoginData {
   username: string;
   password: string;
 }
+
 interface AuthStore {
-  authUser: any | null;
+  authUser: User | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
@@ -37,8 +39,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     try {
       const res = await axiosInstance.get("/auth/check");
       set({authUser: res.data});
-    } catch (error) {
-      console.log("Error in checkAuth:", error);
+    } catch (error: any) {
+      console.log("Error in CheckAuth:", error.response.data.message);
       set({authUser: null});
     } finally {
       set({isCheckingAuth: false});
@@ -52,7 +54,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.success("Account created sucessfully");
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in SignUp: " + error.response.data.message);
+      console.log("Error in SignUp: ", error.response.data.message);
     } finally {
       set({ isSigningUp: false});
     }
@@ -66,7 +68,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in LogIn: " + error.response.data.message);
+      console.log("Error in LogIn: ", error.response.data.message);
     } finally {
       set({ isLoggingIn: false });
     }
@@ -78,7 +80,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.success("Logged out sucessfully");
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in LogOut: " + error.response.data.message);
+      console.log("Error in LogOut: ", error.response.data.message);
     }
   },
   updateProfile: async (data) =>{
@@ -89,7 +91,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       toast.success("Profile updated successfully");
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in UpdateProfile: " + error.response.data.message);
+      console.log("Error in UpdateProfile: ", error.response.data.message);
     } finally {
       set({ isUpdatingProfile: false });
     }
