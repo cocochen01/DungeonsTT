@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useGameStore } from "../store/useGameStore";
+import { useAuthStore } from "../store/useAuthStore";
 import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import { Users } from "lucide-react";
 
 const LeftSidebar = () => {
   const { getGamerooms, gamerooms, selectedGameroom, setSelectedGameroom, isGameroomsLoading } = useGameStore();
 
-  const activeGamerooms: string[] = [];
+  const { activeGamerooms } = useAuthStore();
 
   useEffect(() => {
     getGamerooms();

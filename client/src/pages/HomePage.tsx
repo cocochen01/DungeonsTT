@@ -1,7 +1,7 @@
 import LeftSidebar from "../components/LeftSidebar";
-import NoRoomSelected from "../components/NoRoomSelected";
+import NoRoomSelected from "../components/NoGameroomSelected";
 import RightSidebar from "../components/RightSidebar";
-import Tabletop from "../components/Tabletop";
+import Gameroom from "../components/Gameroom";
 import { useGameStore } from "../store/useGameStore";
 
 
@@ -21,7 +21,7 @@ const HomePage = () => {
 
             {/* CENTER: Tabletop */}
             <div className="w-3/5 bg-base-200">
-              {selectedGameroom ? <Tabletop /> : <NoRoomSelected />}
+              {selectedGameroom ? <Gameroom /> : <NoRoomSelected />}
             </div>  
 
             {/* RIGHT: other stuff */}

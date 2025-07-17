@@ -20,6 +20,7 @@ interface AuthStore {
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
+  activeGamerooms: string[];
 
   checkAuth: () => Promise<void>;
   signup: (data: SignUpData) => Promise<void>;
@@ -33,8 +34,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-
   isCheckingAuth: true,
+  activeGamerooms: [],
+
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
