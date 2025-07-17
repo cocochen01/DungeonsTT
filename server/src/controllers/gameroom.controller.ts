@@ -59,6 +59,35 @@ export const getGameroom = async (req: any, res: Response): Promise<void> => {
   }
 };
 
+export const toggleGameroomStatus = async (req: any, res: Response): Promise<void> => {
+  try {
+    const gameroomId = req.params.id;
+    const userId = req.user._id;
+
+    const gameroom = await Gameroom.findById(gameroomId);
+
+    if (!gameroom) {
+      res.status(404).json({ message: "Gameroom not found." });
+      return;
+    }
+
+    if (gameroom.owner.toString() !== userId.toString()) {
+      res.status(403).json({ message: "Only the owner can change gameroom status." });
+      return;
+    }
+
+    gameroom.isActive = !gameroom.isActive;
+    await gameroom.save();
+    
+    res.status(200).json(gameroom);
+
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error toggling gameroom status:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 export const getUserGamerooms = async (req: any, res: Response): Promise<void> => {
   try {
     const userId = req.user._id;

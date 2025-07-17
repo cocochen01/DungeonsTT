@@ -72,7 +72,7 @@ const LeftSidebar = () => {
         ))}
 
         {activeGamerooms.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
+          <div className="text-center text-zinc-500 py-4">No active gamerooms</div>
         )}
       </div>
     </aside>

@@ -4,6 +4,7 @@ import {
   createGameroom,
   getGameroom,
   getUserGamerooms,
+  toggleGameroomStatus,
   updateGameroom
 } from "../controllers/gameroom.controller";
 import { protectRoute } from "../middleware/auth.middleware";
@@ -12,6 +13,9 @@ const router = express.Router();
 
 // Get all gamerooms user is a member of
 router.get("/mygamerooms", protectRoute, getUserGamerooms);
+
+// Toggle status
+router.patch("/:id/toggle-status", protectRoute, toggleGameroomStatus);
 
 // Add a user to a gameroom
 router.post("/:id/adduser", protectRoute, addUserToGameroom);

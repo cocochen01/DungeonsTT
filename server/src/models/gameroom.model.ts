@@ -17,6 +17,10 @@ const gameroomSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
     icon: {
       type: String,
       default: "",
