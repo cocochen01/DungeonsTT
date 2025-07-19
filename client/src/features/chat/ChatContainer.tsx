@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useGameStore } from "../../store/useGameStore";
+import { useChatStore } from "../../store/useChatStore";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 
 const ChatContainer = () => {
   //chat messages
-  const { messages, getMessages, isMessagesLoading, currentGameroom  } = useGameStore();
+  const { messages, getMessages, isMessagesLoading, currentGameroom  } = useChatStore();
 
   useEffect(() => {
     if (currentGameroom?._id)

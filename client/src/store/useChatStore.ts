@@ -4,7 +4,7 @@ import { axiosInstance } from "../lib/axios";
 import type { Message } from "../types/message";
 import type { Gameroom } from "../types/gameroom";
 
-interface GameStore {
+interface ChatStore {
   messages: Message[];
   gamerooms: Gameroom[];
   currentGameroom: Gameroom | null;
@@ -13,10 +13,10 @@ interface GameStore {
 
   getGamerooms: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
-  setSelectedGameroom: (selectedGameroom: Gameroom) => Promise<void>;
+  setCurrentGameroom: (selectedGameroom: Gameroom | null) => Promise<void>;
 }
 
-export const useGameStore = create<GameStore>((set) => ({
+export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
   gamerooms: [],
   currentGameroom: null,
@@ -47,5 +47,5 @@ export const useGameStore = create<GameStore>((set) => ({
       set({ isMessagesLoading: false });
     }
   },
-  setSelectedGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),
+  setCurrentGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),
 }));

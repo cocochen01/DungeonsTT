@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useGameStore } from "../../store/useGameStore";
+import { useChatStore } from "../../store/useChatStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import { Users } from "lucide-react";
 
 const LeftSidebar = () => {
-  const { getGamerooms, gamerooms, currentGameroom: selectedGameroom, setSelectedGameroom, isGameroomsLoading } = useGameStore();
+  const { getGamerooms, gamerooms, currentGameroom: selectedGameroom, setCurrentGameroom: setSelectedGameroom, isGameroomsLoading } = useChatStore();
 
   const { activeGamerooms } = useAuthStore();
 
@@ -54,7 +54,7 @@ const LeftSidebar = () => {
                 alt={gameroom.name}
                 className="size-12 object-cover rounded-full"
               />
-              {activeGamerooms.includes(gameroom._id) && (
+              {gameroom.isActive && (
                 <span
                   className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
@@ -66,7 +66,7 @@ const LeftSidebar = () => {
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{gameroom.name}</div>
               <div className="text-sm text-zinc-400">
-                {activeGamerooms.includes(gameroom._id) ? "Active" : "Inactive"}
+                {gameroom.isActive ? "Active" : "Inactive"}
               </div>
             </div>
           </button>

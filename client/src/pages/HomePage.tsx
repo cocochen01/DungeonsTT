@@ -2,11 +2,11 @@ import LeftSidebar from "../components/layout/LeftSidebar";
 import NoGameroomSelected from "../features/gameroom/NoGameroomSelected";
 import ChatContainer from "../features/chat/ChatContainer";
 import GameroomTabletop from "../features/gameroom/GameroomTabletop";
-import { useGameStore } from "../store/useGameStore";
+import { useChatStore } from "../store/useChatStore";
 
 
 const HomePage = () => {
-  const { currentGameroom: selectedGameroom } = useGameStore();
+  const { currentGameroom: selectedGameroom } = useChatStore();
 
   return (
     <div className="h-screen bg-base-200">
