@@ -7,7 +7,7 @@ import type { Gameroom } from "../types/gameroom";
 interface GameStore {
   messages: Message[];
   gamerooms: Gameroom[];
-  selectedGameroom: Gameroom | null;
+  currentGameroom: Gameroom | null;
   isGameroomsLoading: boolean;
   isMessagesLoading: boolean;
 
@@ -19,7 +19,7 @@ interface GameStore {
 export const useGameStore = create<GameStore>((set) => ({
   messages: [],
   gamerooms: [],
-  selectedGameroom: null,
+  currentGameroom: null,
   isGameroomsLoading: false,
   isMessagesLoading: false,
 
@@ -47,5 +47,5 @@ export const useGameStore = create<GameStore>((set) => ({
       set({ isMessagesLoading: false });
     }
   },
-  setSelectedGameroom: async (selectedGameroom) => set ({ selectedGameroom }),
+  setSelectedGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),
 }));

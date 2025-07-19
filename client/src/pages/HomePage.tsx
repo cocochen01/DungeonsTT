@@ -1,12 +1,12 @@
-import LeftSidebar from "../components/LeftSidebar";
-import NoRoomSelected from "../components/NoGameroomSelected";
-import RightSidebar from "../components/RightSidebar";
-import Gameroom from "../components/Gameroom";
+import LeftSidebar from "../components/layout/LeftSidebar";
+import NoGameroomSelected from "../features/gameroom/NoGameroomSelected";
+import ChatContainer from "../features/chat/ChatContainer";
+import GameroomTabletop from "../features/gameroom/GameroomTabletop";
 import { useGameStore } from "../store/useGameStore";
 
 
 const HomePage = () => {
-  const { selectedGameroom } = useGameStore();
+  const { currentGameroom: selectedGameroom } = useGameStore();
 
   return (
     <div className="h-screen bg-base-200">
@@ -21,12 +21,12 @@ const HomePage = () => {
 
             {/* CENTER: Tabletop */}
             <div className="w-3/5 bg-base-200">
-              {selectedGameroom ? <Gameroom /> : <NoRoomSelected />}
+              {selectedGameroom ? <GameroomTabletop /> : <NoGameroomSelected />}
             </div>  
 
             {/* RIGHT: other stuff */}
             <div className="w-1/5 border-l border-base-300">
-              <RightSidebar />
+              <ChatContainer />
             </div>
 
           </div>
