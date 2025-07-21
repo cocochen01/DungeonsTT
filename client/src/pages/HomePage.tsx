@@ -3,6 +3,7 @@ import NoGameroomSelected from "../features/gameroom/NoGameroomSelected";
 import ChatContainer from "../features/chat/ChatContainer";
 import GameroomTabletop from "../features/gameroom/GameroomTabletop";
 import { useChatStore } from "../store/useChatStore";
+import RightSidebar from "../components/layout/RightSideBar";
 
 
 const HomePage = () => {
@@ -26,7 +27,7 @@ const HomePage = () => {
 
             {/* RIGHT: other stuff */}
             <div className="w-1/5 border-l border-base-300">
-              <ChatContainer />
+              <RightSidebar />
             </div>
 
           </div>

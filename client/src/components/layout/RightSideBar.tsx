@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useChatStore } from "../../store/useChatStore";
 import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import ChatHeader from "../../features/chat/ChatHeader";
+import ChatContainer from "../../features/chat/ChatContainer";
 
 const RightSidebar = () => {
-  const { getGamerooms, gamerooms, currentGameroom, setCurrentGameroom, isGameroomsLoading } = useChatStore();
-
-  const { activeGamerooms } = useAuthStore();
+  const { getGamerooms, currentGameroom, isGameroomsLoading } = useChatStore();
 
   useEffect(() => {
     getGamerooms();
@@ -18,9 +16,11 @@ const RightSidebar = () => {
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
-
-      <p>No Gameroom selected</p>
-
+      {currentGameroom ? <ChatContainer /> : (
+        <div className="p-4 text-zinc-400 text-sm italic">
+          No gameroom selected.
+        </div>
+      )}
     </div>
   );
 };
