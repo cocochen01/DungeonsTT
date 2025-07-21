@@ -4,6 +4,11 @@ import { axiosInstance } from "../lib/axios";
 import type { Message } from "../types/message";
 import type { Gameroom } from "../types/gameroom";
 
+interface message {
+  text: string;
+  image?: string | null;
+}
+
 interface ChatStore {
   messages: Message[];
   gamerooms: Gameroom[];
@@ -13,10 +18,11 @@ interface ChatStore {
 
   getGamerooms: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
+  sendMessage: (messageData: message) => Promise<void>;
   setCurrentGameroom: (selectedGameroom: Gameroom | null) => Promise<void>;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   gamerooms: [],
   currentGameroom: null,
@@ -45,6 +51,18 @@ export const useChatStore = create<ChatStore>((set) => ({
       console.log("Error in GetMessages: ", error.response.data.message);
     } finally {
       set({ isMessagesLoading: false });
+    }
+  },
+  sendMessage: async (messageData) => {
+    const { currentGameroom, messages } = get();
+    try {
+      if(currentGameroom) {
+        const res = await axiosInstance.post(`/messages/send/${currentGameroom._id}`, messageData);
+        set({messages:[...messages, res.data]});
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      console.log("Error in GetMessages: ", error.response.data.message);
     }
   },
   setCurrentGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),

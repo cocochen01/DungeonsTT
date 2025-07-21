@@ -5,7 +5,7 @@ import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import { Users } from "lucide-react";
 
 const LeftSidebar = () => {
-  const { getGamerooms, gamerooms, currentGameroom: selectedGameroom, setCurrentGameroom: setSelectedGameroom, isGameroomsLoading } = useChatStore();
+  const { getGamerooms, gamerooms, currentGameroom, setCurrentGameroom, isGameroomsLoading } = useChatStore();
 
   const { activeGamerooms } = useAuthStore();
 
@@ -41,11 +41,11 @@ const LeftSidebar = () => {
         {gamerooms.map((gameroom) => (
           <button
             key={gameroom._id}
-            onClick={() => setSelectedGameroom(gameroom)}
+            onClick={() => setCurrentGameroom(gameroom)}
             className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
-              ${selectedGameroom?._id === gameroom._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+              ${currentGameroom?._id === gameroom._id ? "bg-base-300 ring-1 ring-base-300" : ""}
             `}
           >
             <div className="relative mx-auto lg:mx-0">
