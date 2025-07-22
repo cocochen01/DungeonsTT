@@ -5,22 +5,24 @@ import ChatHeader from "../../features/chat/ChatHeader";
 import ChatContainer from "../../features/chat/ChatContainer";
 
 const RightSidebar = () => {
-  const { getGamerooms, currentGameroom, isGameroomsLoading } = useChatStore();
+  const { getGamerooms, currentGameroom } = useChatStore();
 
   useEffect(() => {
     getGamerooms();
   }, [getGamerooms]);
 
-  // if (isGameroomsLoading) return <LeftSidebarSkeleton />;
-
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex h-full flex-col overflow-hidden">
       <ChatHeader />
-      {currentGameroom ? <ChatContainer /> : (
-        <div className="p-4 text-zinc-400 text-sm italic">
-          No gameroom selected.
-        </div>
-      )}
+      <div className="flex-1 overflow-y-auto">
+        {currentGameroom ? (
+          <ChatContainer />
+        ) : (
+          <div className="p-4 text-zinc-400 text-sm italic">
+            No gameroom selected.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
