@@ -18,12 +18,13 @@ export const getUsersForSideBar = async (req: any, res: Response): Promise<void>
 
 export const getMessages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {gameroomId} = req.params;
+    const { id: gameroomId } = req.params;
     //const myId = req.user._id;
 
     const messages = await Message.find({ gameroomId: gameroomId })
-      .populate("senderId", "username profilePic")
-      .sort({ createdAt: 1 });
+      .populate("sender", "username profilePic")
+      .sort({ createdAt: 1 })
+      .lean();
 
     res.status(200).json(messages);
   } catch (error) {
@@ -37,7 +38,7 @@ export const sendMessage = async (req: any, res:Response) => {
   try {
     const { text, image } = req.body;
     const { id: gameroomId } = req.params;
-    const senderId = req.user._id;
+    const sender = req.user._id;
 
     if (!text && !image) {
       res.status(400).json({ message: "Message must contain text or image." });
@@ -51,7 +52,7 @@ export const sendMessage = async (req: any, res:Response) => {
     }
 
     const newMessage = new Message({
-      senderId,
+      sender,
       gameroomId,
       ...(text && { text }),
       ...(imageURL && { image: imageURL }),

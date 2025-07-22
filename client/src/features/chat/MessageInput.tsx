@@ -7,7 +7,7 @@ const MessageInput = () => {
   const [text, setText] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage } = useChatStore();
+  const { currentGameroom, sendMessage, getMessages } = useChatStore();
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,6 +43,9 @@ const MessageInput = () => {
         text: text.trim(),
         image: imagePreview,
       });
+
+      if (currentGameroom)
+        await getMessages(currentGameroom._id);
 
       setText("");
       setImagePreview(null);

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useChatStore } from "../../store/useChatStore";
-import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
+// import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import ChatHeader from "../../features/chat/ChatHeader";
 import ChatContainer from "../../features/chat/ChatContainer";
 
@@ -11,7 +11,7 @@ const RightSidebar = () => {
     getGamerooms();
   }, [getGamerooms]);
 
-  if (isGameroomsLoading) return <LeftSidebarSkeleton />;
+  // if (isGameroomsLoading) return <LeftSidebarSkeleton />;
 
   return (
     <div className="flex-1 flex flex-col overflow-auto">

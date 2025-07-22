@@ -57,12 +57,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const { currentGameroom, messages } = get();
     try {
       if(currentGameroom) {
-        const res = await axiosInstance.post(`/messages/send/${currentGameroom._id}`, messageData);
+        const res = await axiosInstance.post(`/message/send/${currentGameroom._id}`, messageData);
         set({messages:[...messages, res.data]});
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in GetMessages: ", error.response.data.message);
+      console.log("Error in SendMessages: ", error.response.data.message);
     }
   },
   setCurrentGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),
