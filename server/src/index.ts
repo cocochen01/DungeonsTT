@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 
 import { connectDB } from './lib/db';
 import { app, server } from './lib/socket';
+import { startupFunctions } from './startup';
 
 dotenv.config();
 
@@ -28,3 +29,5 @@ server.listen(PORT, () => {
   console.log("server is running on port: " + PORT);
   connectDB();
 });
+
+startupFunctions();
