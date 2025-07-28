@@ -24,6 +24,7 @@ interface AuthStore {
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
+  activeUsers: string[];
   activeGamerooms: string[];
   socket: Socket | null;
 
@@ -42,6 +43,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
+  activeUsers: [],
   activeGamerooms: [],
   socket: null,
 
@@ -113,10 +115,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io(BASE_URL);
+    const socket = io(BASE_URL, {
+      query: {
+        userId: authUser._id,
+      },
+    });
     socket.connect();
 
     set({ socket: socket });
+
+    socket.on("getActiveUsers", (userIds) => {
+      set({ activeUsers: userIds });
+    });
   },
   disconnectSocket: () => {
     if (get().socket?.connected)
