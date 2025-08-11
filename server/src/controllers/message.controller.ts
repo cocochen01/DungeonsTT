@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import User from '../models/user.model';
 import Message from '../models/message.model';
 import cloudinary from '../lib/cloudinary';
+import { io } from '../lib/socket';
 
 export const getUsersForSideBar = async (req: any, res: Response): Promise<void> => {
   try {
@@ -22,7 +23,7 @@ export const getMessages = async (req: Request, res: Response): Promise<void> =>
     //const myId = req.user._id;
 
     const messages = await Message.find({ gameroomId: gameroomId })
-      .populate("sender", "username profilePic")
+      .populate("senderId", "username profilePic")
       .sort({ createdAt: 1 })
       .lean();
 
@@ -38,7 +39,7 @@ export const sendMessage = async (req: any, res:Response) => {
   try {
     const { text, image } = req.body;
     const { id: gameroomId } = req.params;
-    const sender = req.user._id;
+    const senderId = req.user._id;
 
     if (!text && !image) {
       res.status(400).json({ message: "Message must contain text or image." });
@@ -52,15 +53,19 @@ export const sendMessage = async (req: any, res:Response) => {
     }
 
     const newMessage = new Message({
-      sender,
+      senderId,
       gameroomId,
       ...(text && { text }),
       ...(imageURL && { image: imageURL }),
     });
 
     await newMessage.save();
-    // todo: realtime functionality with socket.io
-    res.status(201).json(newMessage);
+    
+    const populatedMessage = await newMessage.populate('senderId', 'username profilePic');
+    io.to(`gameroom:${gameroomId}`).emit("newMessage", populatedMessage);
+
+    res.status(201).json(populatedMessage);
+    console.log(populatedMessage);
   } catch (error) {
     const err = error as Error;
     console.error("Error in sendMessage: ", err.message);

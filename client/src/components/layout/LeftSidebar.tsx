@@ -3,11 +3,22 @@ import { useChatStore } from "../../store/useChatStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import { Users } from "lucide-react";
+import { useGameroomStore } from "../../store/useGameroomStore";
+import { useSocketStore } from "../../store/useSocketStore";
 
 const LeftSidebar = () => {
-  const { getGamerooms, gamerooms, currentGameroom, setCurrentGameroom, isGameroomsLoading } = useChatStore();
+  const { socket } = useSocketStore();
+  const { currentGameroom, setCurrentGameroom, setupSocketListeners } = useChatStore();
+  const { getGamerooms, myGamerooms, isGameroomsLoading } = useGameroomStore();
 
   const { activeGamerooms } = useAuthStore();
+
+  useEffect(() => {
+    if (socket) {
+      console.log("useeffect");
+      setupSocketListeners();
+    }
+  }, [socket, setupSocketListeners]);
 
   useEffect(() => {
     getGamerooms();
@@ -38,7 +49,7 @@ const LeftSidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {gamerooms.map((gameroom) => (
+        {myGamerooms.map((gameroom) => (
           <button
             key={gameroom._id}
             onClick={() => setCurrentGameroom(gameroom)}

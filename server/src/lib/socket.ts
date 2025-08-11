@@ -7,29 +7,61 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"]
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
-// Online users:
-const userSocketMap: Record<string, string> = {}; // { userId: socketId }
+// Map of gameroomId -> Set of userIds
+const gameroomUsersMap: Record<string, Set<string>> = {};
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId as string;
-  if (!userId) return;
+  const gameroomId = socket.handshake.query.gameroomId as string;
 
-  console.log(`Connected UserId: ${userId}, SocketId: `, socket.id);
+  if (!userId || !gameroomId) {
+    console.warn("Missing userId or gameroomId on connection");
+    socket.disconnect();
+    return;
+  }
 
-  userSocketMap[userId] = socket.id;
+  socket.join(`gameroom:${gameroomId}`);
 
-  // Sends events to all connected clients
-  io.emit("getActiveUsers", Object.keys(userSocketMap));
+  if (!gameroomUsersMap[gameroomId]) {
+    gameroomUsersMap[gameroomId] = new Set();
+  }
+  gameroomUsersMap[gameroomId].add(userId);
+
+  console.log(`Connected UserId: ${userId} to GameroomId: ${gameroomId}, SocketId:`, socket.id);
+
+  io.to(`gameroom:${gameroomId}`).emit("getActiveUsers", Array.from(gameroomUsersMap[gameroomId]));
+
+  socket.on("sendMessage", ({ gameroomId }) => {
+    io.to(`gameroom:${gameroomId}`).emit("newMessage");
+
+    socket.broadcast
+      .except(`gameroom:${gameroomId}`)
+      .emit("gameroomNotification", { gameroomId });
+  });
 
   socket.on("disconnect", () => {
-    console.log(`Disconnected UserId: ${userId}, SocketId: `, socket.id);
+    if (!gameroomUsersMap[gameroomId]) return;
 
-    delete userSocketMap[userId];
-    io.emit("getActiveUsers", Object.keys(userSocketMap));
+    gameroomUsersMap[gameroomId].delete(userId);
+
+    if (gameroomUsersMap[gameroomId].size === 0) {
+      io.to(`gameroom:${gameroomId}`).emit("getActiveUsers", []);
+      delete gameroomUsersMap[gameroomId];
+    } else {
+      io.to(`gameroom:${gameroomId}`).emit("getActiveUsers", Array.from(gameroomUsersMap[gameroomId]));
+    }
+
+    if (socket) {
+      socket.leave(`gameroom:${gameroomId}`);
+    }
+
+    console.log(`Disconnected UserId: ${userId}, SocketId:`, socket.id);
   });
 });
 

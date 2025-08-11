@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 import type { Message } from "../types/message";
 import type { Gameroom } from "../types/gameroom";
+import { useSocketStore } from "./useSocketStore";
 
 interface message {
   text: string;
@@ -11,36 +12,45 @@ interface message {
 
 interface ChatStore {
   messages: Message[];
-  gamerooms: Gameroom[];
   currentGameroom: Gameroom | null;
-  isGameroomsLoading: boolean;
+  activeUsers: string[];
   isMessagesLoading: boolean;
 
-  getGamerooms: () => Promise<void>;
-  getMessages: (userId: string) => Promise<void>;
-  sendMessage: (messageData: message) => Promise<void>;
   setCurrentGameroom: (selectedGameroom: Gameroom | null) => Promise<void>;
+  getMessages: (gameroomId: string) => Promise<void>;
+  sendMessage: (messageData: message) => Promise<void>;
+  setupSocketListeners: () => void;
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
-  gamerooms: [],
   currentGameroom: null,
-  isGameroomsLoading: false,
+  activeUsers: [],
   isMessagesLoading: false,
 
-  getGamerooms: async () => {
-    set({ isGameroomsLoading: true });
-    try {
-      const res = await axiosInstance.get("/gameroom/mygamerooms");
-      set({ gamerooms: res.data });
-    } catch (error: any) {
-      toast.error(error.response.data.message);
-      console.log("Error in GetGamerooms: ", error.response.data.message);
-    } finally {
-      set({ isGameroomsLoading: false });
-    }
-  },
+  setCurrentGameroom: async (selectedGameroom) => {
+  const { currentGameroom } = get();
+  if (selectedGameroom?._id === currentGameroom?._id) return;
+
+  const { disconnectSocket, connectSocket } = useSocketStore.getState();
+  disconnectSocket();
+
+  if (!selectedGameroom) {
+    set({ currentGameroom: null });
+    return;
+  }
+
+  set({ currentGameroom: null });
+
+  try {
+    await get().getMessages(selectedGameroom._id);
+    set({ currentGameroom: selectedGameroom });
+    connectSocket(selectedGameroom._id);
+  } catch (err) {
+    console.error("Failed to load messages:", err);
+    set({ currentGameroom: null });
+  }
+},
   getMessages: async (gameroomId) => {
     set({ isMessagesLoading: true });
     try {
@@ -48,22 +58,42 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       set({ messages: res.data });
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in GetMessages: ", error.response.data.message);
     } finally {
       set({ isMessagesLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
-    const { currentGameroom, messages } = get();
+    const { currentGameroom, /*messages*/ } = get();
+    const { socket } = useSocketStore.getState();
+    if (!currentGameroom) return;
     try {
-      if(currentGameroom) {
-        const res = await axiosInstance.post(`/message/send/${currentGameroom._id}`, messageData);
-        set({messages:[...messages, res.data]});
-      }
+      await axiosInstance.post(`/message/send/${currentGameroom._id}`, messageData);
+      socket?.emit("sendMessage", { gameroomId: currentGameroom._id });
     } catch (error: any) {
       toast.error(error.response.data.message);
-      console.log("Error in SendMessages: ", error.response.data.message);
     }
   },
-  setCurrentGameroom: async (selectedGameroom) => set ({ currentGameroom: selectedGameroom }),
+
+  setupSocketListeners: () => {
+    const { socket } = useSocketStore.getState();
+    if (!socket) return;
+
+    socket.on("newMessage", () => {
+      const { currentGameroom } = get();
+      if (currentGameroom) {
+        get().getMessages(currentGameroom._id);
+      }
+      // TODO: Play sound?
+    });
+
+    socket.on("gameroomNotification", ({ gameroomId }) => {
+      // TODO: Add green dot indicator in gamerooms list
+      console.log("New activity in room:", gameroomId);
+    });
+
+    socket.on("getActiveUsers", (users) => {
+      set({ activeUsers: Array.isArray(users) ? users : [] });
+    });
+  },
 }));
