@@ -15,7 +15,6 @@ const LeftSidebar = () => {
 
   useEffect(() => {
     if (socket) {
-      console.log("useeffect");
       setupSocketListeners();
     }
   }, [socket, setupSocketListeners]);
