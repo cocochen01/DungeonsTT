@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js';
+import { Application, Container } from "pixi.js";
 
 export async function setupPixi(container: HTMLElement) {
   const app = new Application();
@@ -9,11 +9,14 @@ export async function setupPixi(container: HTMLElement) {
     backgroundColor: 0x29bb52,
     antialias: true,
     resolution: 1,
-    preference: 'webgl', // or webgpu
+    preference: "webgl",
     resizeTo: container,
   });
 
   container.appendChild(app.canvas);
 
-  return app;
+  const camera = new Container();
+  app.stage.addChild(camera);
+
+  return { app, camera };
 }

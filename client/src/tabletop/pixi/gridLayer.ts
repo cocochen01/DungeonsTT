@@ -4,8 +4,8 @@ interface GridOptions {
   cellSize?: number;
   lineColor?: number;
   lineWidth?: number;
-  rows?: number; // number of rows to generate
-  cols?: number; // number of cols to generate
+  rows?: number;
+  cols?: number;
 }
 
 export function createGridLayer(options: GridOptions = {}): Container {
@@ -13,7 +13,7 @@ export function createGridLayer(options: GridOptions = {}): Container {
     cellSize = 50,
     lineColor = 0xcccccc,
     lineWidth = 1,
-    rows = 100, // enough to cover a big world area
+    rows = 100,
     cols = 100,
   } = options;
 
@@ -25,7 +25,7 @@ export function createGridLayer(options: GridOptions = {}): Container {
     color: lineColor,
     alpha: 1,
   });
-  
+
   graphics.beginPath();
 
   const totalWidth = cols * cellSize;
@@ -46,7 +46,6 @@ export function createGridLayer(options: GridOptions = {}): Container {
   graphics.stroke();
   gridContainer.addChild(graphics);
 
-  // Center the grid at 0,0 (optional, makes panning easier)
   gridContainer.pivot.set(totalWidth / 2, totalHeight / 2);
 
   return gridContainer;
