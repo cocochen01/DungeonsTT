@@ -2,7 +2,6 @@ import { Application, Container } from "pixi.js";
 
 export async function setupPixi(container: HTMLElement) {
   const app = new Application();
-
   await app.init({
     width: 800,
     height: 600,
@@ -16,7 +15,10 @@ export async function setupPixi(container: HTMLElement) {
   container.appendChild(app.canvas);
 
   const camera = new Container();
+  const uiLayer = new Container();
+  
   app.stage.addChild(camera);
+  app.stage.addChild(uiLayer);
 
-  return { app, camera };
+  return { app, camera, uiLayer };
 }

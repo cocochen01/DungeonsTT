@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Application } from "pixi.js";
 import { setupPixi } from "../../tabletop/pixi/pixiApp";
-import { createGridLayer } from "../../tabletop/pixi/gridLayer";
 import { enableCameraControls } from "../../tabletop/pixi/cameraControls";
+import { GridManager } from "../../tabletop/grid/gridManager";
+import { createToolbar } from "../../tabletop/pixi/ui/leftToolbar";
 
 const GameroomTabletop = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -12,14 +13,23 @@ const GameroomTabletop = () => {
     (async () => {
       if (!containerRef.current) return;
 
-      const { app, camera } = await setupPixi(containerRef.current);
+      const { app, camera, uiLayer } = await setupPixi(containerRef.current);
       appRef.current = app;
 
+      const gridManager = new GridManager(camera, {
+        cellSize: 50,
+        rows: 50,
+        cols: 50,
+      });
+
+      const toolbar = createToolbar(
+        gridManager,
+        app.renderer.width,
+        app.renderer.height
+      );
+      uiLayer.addChild(toolbar);
+
       enableCameraControls(app, camera);
-
-      const gridLayer = createGridLayer({ cellSize: 50, rows: 200, cols: 200 });
-      camera.addChild(gridLayer);
-
       camera.position.set(app.renderer.width / 2, app.renderer.height / 2);
     })();
 
