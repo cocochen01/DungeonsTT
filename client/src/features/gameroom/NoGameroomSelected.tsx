@@ -17,7 +17,7 @@ const NoGameroomSelected = () => {
         </div>
 
         {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to DungeonTT!</h2>
+        <h2 className="text-2xl font-bold">Welcome to DungeonsTT!</h2>
         <p className="text-base-content/60">
           Enter a gameroom from the sidebar
         </p>
