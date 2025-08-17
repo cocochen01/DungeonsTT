@@ -1,9 +1,9 @@
 import { Container } from "pixi.js";
+
 export function setNoInteractions(container: Container, containerDom: HTMLElement) {
   container.eventMode = "static";
+
   container.on("pointerdown", (e) => e.stopPropagation());
-  container.on("pointerup", (e) => e.stopPropagation());
-  container.on("pointermove", (e) => e.stopPropagation());
   container.on("pointertap", (e) => e.stopPropagation());
   container.on("pointerover", (e) => e.stopPropagation());
   container.on("pointerout", (e) => e.stopPropagation());

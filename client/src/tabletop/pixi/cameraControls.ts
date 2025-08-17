@@ -1,4 +1,4 @@
-import { Application, Container } from "pixi.js";
+import { Application, Container, FederatedPointerEvent } from "pixi.js";
 
 export function enableCameraControls(app: Application, camera: Container) {
   let isDragging = false;
@@ -8,21 +8,20 @@ export function enableCameraControls(app: Application, camera: Container) {
   app.stage.eventMode = "static";
   app.stage.hitArea = app.screen;
 
-  app.stage.on("pointerdown", (event) => {
+  app.stage.on("pointerdown", (event: FederatedPointerEvent) => {
     isDragging = true;
     lastX = event.global.x;
     lastY = event.global.y;
+
+    window.addEventListener("pointerup", handlePointerUp);
   });
 
-  app.stage.on("pointerup", () => {
+  function handlePointerUp() {
     isDragging = false;
-  });
+    window.removeEventListener("pointerup", handlePointerUp);
+  }
 
-  app.stage.on("pointerupoutside", () => {
-    isDragging = false;
-  });
-
-  app.stage.on("pointermove", (event) => {
+  app.stage.on("pointermove", (event: FederatedPointerEvent) => {
     if (!isDragging) return;
 
     const dx = event.global.x - lastX;
