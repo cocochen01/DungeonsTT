@@ -23,6 +23,7 @@ const GameroomTabletop = () => {
       });
 
       const toolbar = createToolbar(
+        app.canvas,
         gridManager,
         app.renderer.width,
         app.renderer.height
