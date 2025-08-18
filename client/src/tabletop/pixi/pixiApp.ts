@@ -1,6 +1,5 @@
 import { Application, Container } from "pixi.js";
 import { GridManager } from "../grid/gridManager";
-import { createToolbar } from "./ui/leftToolbar";
 
 export async function setupPixi(container: HTMLElement) {
   const app = new Application();
@@ -27,11 +26,7 @@ export async function setupPixi(container: HTMLElement) {
     cols: 50,
   });
 
-  // replace renderer width/height with actual value
-  const toolbar = createToolbar(app.canvas, gridManager, app.renderer.width, app.renderer.height);
-  uiLayer.addChild(toolbar);
-
   camera.position.set(app.renderer.width / 2, app.renderer.height / 2);
 
-  return { app, camera, uiLayer, gridManager, toolbar };
+  return { app, camera, uiLayer, gridManager };
 }
