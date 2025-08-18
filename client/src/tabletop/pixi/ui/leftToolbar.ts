@@ -17,23 +17,23 @@ export function createToolbar(parentCanvas: HTMLCanvasElement, gridManager: Grid
   toolbar.addChild(defaultBg);
 
   //popup
-  const gridPopup = new Popup({ width: 200, height: 150 });
-  gridPopup.position.set( (screenWidth - gridPopup.width) / 2, (screenHeight - gridPopup.height) / 2);
+  const tokenPopop = new Popup({ width: 200, height: 150 });
+  tokenPopop.position.set( (screenWidth - tokenPopop.width) / 2, (screenHeight - tokenPopop.height) / 2);
 
-  gridPopup.on("added", () => {
+  tokenPopop.on("added", () => {
     gridManager.updateGrid({ rows: 100, cols: 100, cellSize: 40 });
   });
 
-  toolbar.addChild(gridPopup);
+  toolbar.addChild(tokenPopop);
 
   //button
-  const gridButton = createButton({
-    label: "Grid",
-    onPress: () => { gridPopup.toggle(); },
+  const tokenButton = createButton({
+    label: "Tokens",
+    onPress: () => { tokenPopop.toggle(); },
   });
 
-  gridButton.view.position.set(10, 10);
-  toolbar.addChild(gridButton.view);
+  tokenButton.view.position.set(10, 10);
+  toolbar.addChild(tokenButton.view);
 
   return toolbar;
 }
