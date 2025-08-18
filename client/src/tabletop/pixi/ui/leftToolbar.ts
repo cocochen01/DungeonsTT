@@ -29,7 +29,7 @@ export function createToolbar(parentCanvas: HTMLCanvasElement, gridManager: Grid
   //button
   const gridButton = createButton({
     label: "Grid",
-    onClick: () => { gridPopup.toggle(); },
+    onPress: () => { gridPopup.toggle(); },
   });
 
   gridButton.position.set(10, 10);

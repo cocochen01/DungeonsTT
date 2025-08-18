@@ -1,26 +1,28 @@
 import { Container, Graphics, Text, Sprite, Texture } from "pixi.js";
+import { Button } from "@pixi/ui";
 
 interface ButtonOptions {
   label: string;
   iconTexture?: Texture;
   width?: number;
   height?: number;
-  onClick: () => void;
+  onPress: () => void;
 }
 
 export function createButton(options: ButtonOptions): Container {
   const button = new Container();
-  button.eventMode = "static";
-  button.cursor = "pointer";
-
+  
   const width = options.width ?? 40;
   const height = options.height ?? 40;
 
-  const bg = new Graphics()
-    .rect(0, 0, width, height)
-    .fill(0x444444);
+  const newButton = new Button(
+    new Graphics()
+      .rect(0, 0, width, height)
+      .fill(0x444444)
+  );
 
-  button.addChild(bg);
+  newButton.onPress.connect(options.onPress);
+  button.addChild(newButton.view);
 
   if (options.iconTexture) {
     const icon = new Sprite(options.iconTexture);
@@ -37,7 +39,7 @@ export function createButton(options: ButtonOptions): Container {
     button.addChild(label);
   }
 
-  button.on("pointertap", options.onClick);
+  button.on("pointertap", options.onPress);
 
   return button;
 }
