@@ -1,6 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 
 export interface PopupOptions {
+  content?: Container;
   width?: number;
   height?: number;
   bgColor?: number;
@@ -8,6 +9,7 @@ export interface PopupOptions {
 }
 
 export class Popup extends Container {
+  protected content?: Container;
   protected popupWidth: number;
   protected popupHeight: number;
   protected bgColor: number;
@@ -20,8 +22,14 @@ export class Popup extends Container {
     this.popupHeight = options.height ?? 150;
     this.bgColor = options.bgColor ?? 0xffffff;
     this.cornerRadius = options.cornerRadius ?? 10;
+    this.content = options.content;
 
     this.createBackground();
+
+    if (this.content) {
+      this.addChild(this.content);
+    }
+
     this.visible = false;
   }
 
@@ -36,5 +44,8 @@ export class Popup extends Container {
     this.visible = !this.visible;
   }
 
-  public setupContent(): void {}
+  public setupContent(): Container {
+    // change content?
+    return new Container;
+  }
 }
