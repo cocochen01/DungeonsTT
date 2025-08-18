@@ -32,8 +32,8 @@ export function createToolbar(parentCanvas: HTMLCanvasElement, gridManager: Grid
     onPress: () => { gridPopup.toggle(); },
   });
 
-  gridButton.position.set(10, 10);
-  toolbar.addChild(gridButton);
+  gridButton.view.position.set(10, 10);
+  toolbar.addChild(gridButton.view);
 
   return toolbar;
 }
