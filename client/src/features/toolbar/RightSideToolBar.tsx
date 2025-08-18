@@ -12,13 +12,11 @@ const ToolbarButton = ({ icon: Icon, label, onClick, active }: ToolbarButtonProp
     <button
       onClick={onClick}
       className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
-        active
-          ? "bg-zinc-700 text-white"
-          : "text-zinc-400 hover:bg-zinc-700 hover:text-white"
+        active ? "bg-primary/20" : "hover:bg-base-300"
       }`}
       title={label}
     >
-      <Icon size={18} />
+      <Icon size={18} className="text-primary" />
     </button>
   );
 };
@@ -26,9 +24,9 @@ const ToolbarButton = ({ icon: Icon, label, onClick, active }: ToolbarButtonProp
 const RightSideToolBar = () => {
   return (
     <div className="h-full flex flex-col items-center gap-2 py-4 border-r border-base-300">
+      <ToolbarButton icon={Grid} label="Grid" />
       <ToolbarButton icon={Home} label="Home" />
       <ToolbarButton icon={Users} label="Users" />
-      <ToolbarButton icon={Grid} label="Grid" />
       <ToolbarButton icon={MessageSquare} label="Messages" />
       <ToolbarButton icon={Settings} label="Settings" />
     </div>
