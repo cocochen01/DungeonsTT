@@ -1,4 +1,6 @@
 import { Application, Container } from "pixi.js";
+import { GridManager } from "../grid/gridManager";
+import { createToolbar } from "./ui/leftToolbar";
 
 export async function setupPixi(container: HTMLElement) {
   const app = new Application();
@@ -11,14 +13,25 @@ export async function setupPixi(container: HTMLElement) {
     preference: "webgl",
     resizeTo: container,
   });
-
   container.appendChild(app.canvas);
 
   const camera = new Container();
   const uiLayer = new Container();
-  
+
   app.stage.addChild(camera);
   app.stage.addChild(uiLayer);
 
-  return { app, camera, uiLayer };
+  const gridManager = new GridManager(camera, {
+    cellSize: 50,
+    rows: 50,
+    cols: 50,
+  });
+
+  // replace renderer width/height with actual value
+  const toolbar = createToolbar(app.canvas, gridManager, app.renderer.width, app.renderer.height);
+  uiLayer.addChild(toolbar);
+
+  camera.position.set(app.renderer.width / 2, app.renderer.height / 2);
+
+  return { app, camera, uiLayer, gridManager, toolbar };
 }
