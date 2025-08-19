@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import { useChatStore } from "../../store/useChatStore";
+import { useChatStore } from "../../../store/useChatStore";
 import MessageInput from "./MessageInput";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 // import MessagePlaceholder from "./skeletons/MessagePlaceholder";
-import { formatMessageTime } from "../../lib/utils";
-import { useSocketStore } from "../../store/useSocketStore";
+import { formatMessageTime } from "../../../lib/utils";
+import { useSocketStore } from "../../../store/useSocketStore";
 
 const ChatContainer = () => {
   const { messages, /*isMessagesLoading,*/ getMessages, currentGameroom, setupSocketListeners } = useChatStore();

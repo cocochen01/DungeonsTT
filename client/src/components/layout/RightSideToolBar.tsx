@@ -1,4 +1,5 @@
 import { Home, Settings, Users, Grid, MessageSquare } from "lucide-react";
+import { useRightSidebarStore } from "../../store/useRightSidebarStore";
 
 interface ToolbarButtonProps {
   icon: React.ElementType;
@@ -22,13 +23,14 @@ const ToolbarButton = ({ icon: Icon, label, onClick, active }: ToolbarButtonProp
 };
 
 const RightSideToolBar = () => {
+  const { setActivePanel, activePanel } = useRightSidebarStore();
   return (
     <div className="h-full flex flex-col items-center gap-2 py-4 border-r border-base-300">
-      <ToolbarButton icon={Grid} label="Grid" />
+      <ToolbarButton icon={Grid} label="Grid"/>
+      <ToolbarButton icon={MessageSquare} label="Chat" onClick={() => { if (activePanel !== "chat") setActivePanel("chat");}}/>
       <ToolbarButton icon={Home} label="Home" />
       <ToolbarButton icon={Users} label="Users" />
-      <ToolbarButton icon={MessageSquare} label="Messages" />
-      <ToolbarButton icon={Settings} label="Settings" />
+      <ToolbarButton icon={Settings} label="Settings" onClick={() => { if (activePanel !== "settings") setActivePanel("settings");}}/>
     </div>
   );
 };

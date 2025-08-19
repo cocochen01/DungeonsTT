@@ -1,8 +1,8 @@
 import { X } from "lucide-react";
-import { useChatStore } from "../../store/useChatStore";
+import { useChatStore } from "../../../store/useChatStore";
 //import { useAuthStore } from "../../store/useAuthStore";
 
-const ChatHeader = () => {
+const RightSidebarHeader = () => {
   const { currentGameroom, setCurrentGameroom } = useChatStore();
   //const { activeGamerooms } = useAuthStore();
 
@@ -34,4 +34,4 @@ const ChatHeader = () => {
     </div>
   );
 };
-export default ChatHeader;
+export default RightSidebarHeader;
