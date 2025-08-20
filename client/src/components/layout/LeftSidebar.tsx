@@ -4,6 +4,7 @@ import LeftSidebarSkeleton from "./skeletons/LeftSidebarSkeleton";
 import { Users } from "lucide-react";
 import { useGameroomStore } from "../../store/useGameroomStore";
 import { useSocketStore } from "../../store/useSocketStore";
+import LeftSideToolBar from "./LeftSideToolBar";
 
 const LeftSidebar = () => {
   const { socket } = useSocketStore();
@@ -24,54 +25,65 @@ const LeftSidebar = () => {
   if (isGameroomsLoading) return <LeftSidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-      <div className="border-b border-base-300 w-full p-5">
-        <div className="flex items-center gap-2">
-          <Users className="size-6" />
-          <span className="font-medium hidden lg:block">Your Gamerooms</span>
+    <div className="flex flex-row h-full overflow-hidden">
+      <aside className="h-full w-20 xl:w-60 border-r border-base-300 flex flex-col transition-all duration-200">
+        {/**Header */}
+        <div className="border-b border-base-300 w-full p-5">
+          <div className="flex items-center gap-2">
+            <Users className="size-6" />
+            <span className="font-medium hidden xl:block">Your Gamerooms</span>
+          </div>
         </div>
-      </div>
 
-      <div className="overflow-y-auto w-full py-3">
-        {myGamerooms.map((gameroom) => (
-          <button
-            key={gameroom._id}
-            onClick={() => setCurrentGameroom(gameroom)}
-            className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${currentGameroom?._id === gameroom._id ? "bg-base-300 ring-1 ring-base-300" : ""}
-            `}
-          >
-            <div className="relative mx-auto lg:mx-0">
-              <img
-                src={gameroom.icon || "/avatar.png"}
-                alt={gameroom.name}
-                className="size-12 object-cover rounded-full"
-              />
-              {gameroom.isActive && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
+        {/**Rooms list */}
+        <div className="overflow-y-auto w-full py-3">
+          {myGamerooms.map((gameroom) => (
+            <button
+              key={gameroom._id}
+              onClick={() => setCurrentGameroom(gameroom)}
+              className={`
+                w-full p-3 flex items-center gap-3
+                hover:bg-base-300 transition-colors
+                ${currentGameroom?._id === gameroom._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+              `}
+            >
+              <div className="relative mx-auto xl:mx-0">
+                <img
+                  src={gameroom.icon || "/avatar.png"}
+                  alt={gameroom.name}
+                  className="size-12 object-cover rounded-full"
                 />
-              )}
-            </div>
-
-            {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{gameroom.name}</div>
-              <div className="text-sm text-zinc-400">
-                {gameroom.isActive ? "Active" : "Inactive"}
+                {gameroom.isActive && (
+                  <span
+                    className="absolute bottom-0 right-0 size-3 bg-green-500 
+                    rounded-full ring-2 ring-zinc-900"
+                  />
+                )}
               </div>
-            </div>
-          </button>
-        ))}
 
-        {myGamerooms.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No active gamerooms</div>
-        )}
+              {/* User info on larger screens */}
+              <div className="hidden xl:block text-left min-w-0">
+                <div className="font-medium truncate">{gameroom.name}</div>
+                <div className="text-sm text-zinc-400">
+                  {gameroom.isActive ? "Active" : "Inactive"}
+                </div>
+              </div>
+            </button>
+          ))}
+
+          {myGamerooms.length === 0 && (
+            <div className="text-center text-zinc-500 py-4">No active gamerooms</div>
+          )}
+        </div>
+
+      </aside>
+
+      {/**Toolbar */}
+      <div className="w-12 h-full overflow-hidden">
+        <LeftSideToolBar />
       </div>
-    </aside>
+
+    </div>
   );
 };
 export default LeftSidebar;

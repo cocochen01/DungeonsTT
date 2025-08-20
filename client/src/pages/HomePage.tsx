@@ -25,7 +25,7 @@ const HomePage = () => {
             </div>  
 
             {/* RIGHT: other stuff */}
-            <div className="w-100 flex-shrink-0 border-l border-base-300">
+            <div className="w-70 xl:w-100 flex-shrink-0 border-l border-base-300">
               <RightSidebar />
             </div>
 

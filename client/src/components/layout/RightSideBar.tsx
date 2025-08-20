@@ -2,18 +2,18 @@ import { useChatStore } from "../../store/useChatStore";
 import RightSidebarHeader from "../../features/rightsidebar/chat/ChatHeader";
 import ChatContainer from "../../features/rightsidebar/chat/ChatContainer";
 import RightSideToolBar from "./RightSideToolBar";
-import { useRightSidebarStore } from "../../store/useRightSidebarStore";
+import { useSidebarStore } from "../../store/useSidebarStore";
 import GameSettings from "../../features/rightsidebar/settings/GameSettings";
 import NoSelected from "../../features/rightsidebar/NoSelected";
 
 const RightSidebar = () => {
   const { currentGameroom } = useChatStore();
-  const { activePanel } = useRightSidebarStore();
+  const { rightActivePanel } = useSidebarStore();
   const renderContent = () => {
     if (!currentGameroom)
       return (<NoSelected />);
 
-    switch (activePanel) {
+    switch (rightActivePanel) {
       case "chat":
         return (<ChatContainer />);
       case "settings":
