@@ -12,15 +12,15 @@ const HomePage = () => {
     <div className="h-screen bg-base-200">
       <div className="flex items-center justify-center pt-20 px-4">
         <div className="bg-base-100 rounded-lg shadow-xl w-full h-[calc(100vh-8rem)] overflow-hidden">
-          <div className="flex h-full rounded-lg overflow-hidden">
+          <div className="flex w-full h-full rounded-lg overflow-hidden">
             
             {/* LEFT: Rooms list */}
-            <div className="border-r border-base-300">
+            <div className="flex border-r border-base-300">
               <LeftSidebar />
             </div>
 
             {/* CENTER: Tabletop */}
-            <div className="flex-1 bg-base-200 overflow-hidden">
+            <div className="flex flex-1 bg-base-200 overflow-hidden">
               {selectedGameroom ? <GameroomTabletop /> : <NoGameroomSelected />}
             </div>  
 

@@ -11,7 +11,6 @@ const LeftSidebar = () => {
   const { currentGameroom, setCurrentGameroom, setupSocketListeners } = useChatStore();
   const { getGamerooms, myGamerooms, isGameroomsLoading } = useGameroomStore();
 
-
   useEffect(() => {
     if (socket) {
       setupSocketListeners();
@@ -26,16 +25,21 @@ const LeftSidebar = () => {
 
   return (
     <div className="flex flex-row h-full overflow-hidden">
-      <aside className="h-full w-20 xl:w-60 border-r border-base-300 flex flex-col transition-all duration-200">
-        {/**Header */}
+      <aside
+        className={`h-full border-r border-base-300 flex flex-col 
+          ${currentGameroom ? "w-20" : "w-20 xl:w-60"}`}
+      >
+        {/* Header */}
         <div className="border-b border-base-300 w-full p-5">
           <div className="flex items-center gap-2">
             <Users className="size-6" />
-            <span className="font-medium hidden xl:block">Your Gamerooms</span>
+            {!currentGameroom && (
+              <span className="font-medium hidden xl:block">Your Gamerooms</span>
+            )}
           </div>
         </div>
 
-        {/**Rooms list */}
+        {/* Rooms list */}
         <div className="overflow-y-auto w-full py-3">
           {myGamerooms.map((gameroom) => (
             <button
@@ -47,7 +51,7 @@ const LeftSidebar = () => {
                 ${currentGameroom?._id === gameroom._id ? "bg-base-300 ring-1 ring-base-300" : ""}
               `}
             >
-              <div className="relative mx-auto xl:mx-0">
+              <div className={`relative ${currentGameroom ? "mx-auto" : "mx-auto xl:mx-0"}`}>
                 <img
                   src={gameroom.icon || "/avatar.png"}
                   alt={gameroom.name}
@@ -61,13 +65,15 @@ const LeftSidebar = () => {
                 )}
               </div>
 
-              {/* User info on larger screens */}
-              <div className="hidden xl:block text-left min-w-0">
-                <div className="font-medium truncate">{gameroom.name}</div>
-                <div className="text-sm text-zinc-400">
-                  {gameroom.isActive ? "Active" : "Inactive"}
+              {/* Show text only if sidebar is expanded */}
+              {!currentGameroom && (
+                <div className="hidden xl:block text-left min-w-0">
+                  <div className="font-medium truncate">{gameroom.name}</div>
+                  <div className="text-sm text-zinc-400">
+                    {gameroom.isActive ? "Active" : "Inactive"}
+                  </div>
                 </div>
-              </div>
+              )}
             </button>
           ))}
 
@@ -75,15 +81,14 @@ const LeftSidebar = () => {
             <div className="text-center text-zinc-500 py-4">No active gamerooms</div>
           )}
         </div>
-
       </aside>
 
-      {/**Toolbar */}
+      {/* Toolbar */}
       <div className="w-12 h-full overflow-hidden">
         <LeftSideToolBar />
       </div>
-
     </div>
   );
 };
+
 export default LeftSidebar;
