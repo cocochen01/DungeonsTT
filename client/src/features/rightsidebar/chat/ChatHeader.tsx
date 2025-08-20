@@ -4,7 +4,6 @@ import { useChatStore } from "../../../store/useChatStore";
 
 const RightSidebarHeader = () => {
   const { currentGameroom, setCurrentGameroom } = useChatStore();
-  //const { activeGamerooms } = useAuthStore();
 
   return (
     <div className="p-2.5 border-b border-base-300">
