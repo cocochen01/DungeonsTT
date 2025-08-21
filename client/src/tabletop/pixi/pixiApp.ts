@@ -1,5 +1,7 @@
+// pixi/setupPixi.ts
 import { Application, Container } from "pixi.js";
 import { GridManager } from "../grid/gridManager";
+import { useTabletopStore } from "../../store/useTabletopStore";
 
 export async function setupPixi(container: HTMLElement) {
   const app = new Application();
@@ -20,13 +22,22 @@ export async function setupPixi(container: HTMLElement) {
   app.stage.addChild(camera);
   app.stage.addChild(uiLayer);
 
+  // initialize
+  const state = useTabletopStore.getState();
   const gridManager = new GridManager(camera, {
-    cellSize: 50,
-    rows: 50,
-    cols: 50,
+    cellSize: state.cellSize,
+    rows: state.rows,
+    cols: state.cols,
+    lineColor: state.lineColor,
+    lineWidth: state.lineWidth,
   });
 
   camera.position.set(app.renderer.width / 2, app.renderer.height / 2);
+
+  // update values
+  useTabletopStore.subscribe((newState) => {
+    gridManager.updateGrid(newState);
+  });
 
   return { app, camera, uiLayer, gridManager };
 }

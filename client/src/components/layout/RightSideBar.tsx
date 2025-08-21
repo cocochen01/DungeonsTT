@@ -3,7 +3,7 @@ import RightSidebarHeader from "../../features/rightsidebar/chat/ChatHeader";
 import ChatContainer from "../../features/rightsidebar/chat/ChatContainer";
 import RightSideToolBar from "./RightSideToolBar";
 import { useSidebarStore } from "../../store/useSidebarStore";
-import GridSettings from "../../features/rightsidebar/settings/GameSettings";
+import GridSettings from "../../features/rightsidebar/settings/GridSettings";
 import NoSelected from "../../features/rightsidebar/NoSelected";
 
 const RightSidebar = () => {

@@ -1,4 +1,4 @@
-import { Grid, MessageSquare, BookUser } from "lucide-react";
+import { Grid, MessageSquare, SquareUserRound } from "lucide-react";
 import { useSidebarStore, type RightSidebarPanel } from "../../store/useSidebarStore";
 import { ToolbarButton, ToolbarDivider } from "./ToolbarButton";
 import { useChatStore } from "../../store/useChatStore";
@@ -13,7 +13,7 @@ const RightSideToolBar = () => {
   };
   return (
     <div className="h-full flex flex-col items-center gap-2 py-4 border-r border-base-300">
-      <ToolbarButton icon={BookUser} label="Journal" onClick={() => handleButton("journal")}/>
+      <ToolbarButton icon={SquareUserRound} label="Journal" onClick={() => handleButton("journal")}/>
       <ToolbarButton icon={MessageSquare} label="Chat" onClick={() => handleButton("chat")}/>
       <ToolbarDivider/>
       {/**GameMaster */}

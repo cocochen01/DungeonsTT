@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { Graphics } from "pixi.js";
 
 interface GridOptions {
   cellSize?: number;
@@ -8,45 +8,44 @@ interface GridOptions {
   cols?: number;
 }
 
-export function createGridLayer(options: GridOptions = {}): Container {
-  const {
-    cellSize = 50,
+export function drawGrid(graphics: Graphics, options: GridOptions = {}) {
+  const scaleValue = 10;
+
+  let {
+    cellSize = 5,
     lineColor = 0xcccccc,
     lineWidth = 1,
-    rows = 100,
-    cols = 100,
+    rows = 50,
+    cols = 50,
   } = options;
 
-  const gridContainer = new Container();
-  const graphics = new Graphics();
+  cellSize = Math.min(Math.max(cellSize ?? 1, 1), 50);
+  rows = Math.min(Math.max(rows ?? 1, 1), 50);
+  cols = Math.min(Math.max(cols ?? 1, 1), 50);
 
-  graphics.setStrokeStyle({
-    width: lineWidth,
-    color: lineColor,
-    alpha: 1,
-  });
+  const scaledCellSize = cellSize * scaleValue;
+  const totalWidth = cols * scaledCellSize;
+  const totalHeight = rows * scaledCellSize;
 
-  graphics.beginPath();
-
-  const totalWidth = cols * cellSize;
-  const totalHeight = rows * cellSize;
+  graphics.clear();
 
   // Draw vertical lines
-  for (let x = 0; x <= totalWidth; x += cellSize) {
-    graphics.moveTo(x, 0);
-    graphics.lineTo(x, totalHeight);
+  for (let x = 0; x <= totalWidth; x += scaledCellSize) {
+    graphics.poly([x, 0, x, totalHeight]).stroke({
+      width: lineWidth,
+      color: lineColor,
+      alpha: 1,
+    });
   }
 
   // Draw horizontal lines
-  for (let y = 0; y <= totalHeight; y += cellSize) {
-    graphics.moveTo(0, y);
-    graphics.lineTo(totalWidth, y);
+  for (let y = 0; y <= totalHeight; y += scaledCellSize) {
+    graphics.poly([0, y, totalWidth, y]).stroke({
+      width: lineWidth,
+      color: lineColor,
+      alpha: 1,
+    });
   }
 
-  graphics.stroke();
-  gridContainer.addChild(graphics);
-
-  gridContainer.pivot.set(totalWidth / 2, totalHeight / 2);
-
-  return gridContainer;
+  graphics.pivot.set(totalWidth / 2, totalHeight / 2);
 }
