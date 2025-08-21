@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Gameroom from '../models/gameroom.model';
+import Gameroom from '../models/gameroom/gameroom.model';
 import User from '../models/user.model';
 
 export const createGameroom = async (req: any, res: Response): Promise<void> => {

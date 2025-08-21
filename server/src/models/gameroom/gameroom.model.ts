@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import sceneSchema from "./scene/scene.model";
 
 const gameroomSchema = new mongoose.Schema(
   {
@@ -24,6 +25,10 @@ const gameroomSchema = new mongoose.Schema(
     icon: {
       type: String,
       default: "",
+    },
+    scenes: {
+      type: [sceneSchema],
+      default: []
     },
   },
   {
