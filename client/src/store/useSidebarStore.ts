@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
-export type LeftSidebarPanel = "token" | "text" | "drawing" | null;
-export type RightSidebarPanel = "chat" | "settings" | null;
+export type LeftSidebarPanel = "select" | "pan" | "measure" | "draw" | "text" | "dice" | "turnorder" | null;
+export type RightSidebarPanel = "grid" | "journal" | "chat" | null;
 
 interface SidebarStore {
   leftActivePanel: LeftSidebarPanel;

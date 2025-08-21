@@ -15,7 +15,7 @@ const HomePage = () => {
           <div className="flex w-full h-full rounded-lg overflow-hidden">
             
             {/* LEFT: Rooms list */}
-            <div className="flex border-r border-base-300">
+            <div className="flex">
               <LeftSidebar />
             </div>
 

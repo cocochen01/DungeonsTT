@@ -21,7 +21,6 @@ interface AuthStore {
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
   activeUsers: string[];
-  activeGamerooms: string[];
 
   checkAuth: () => Promise<void>;
   signup: (data: SignUpData) => Promise<void>;
@@ -37,7 +36,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isUpdatingProfile: false,
   isCheckingAuth: true,
   activeUsers: [],
-  activeGamerooms: [],
 
   checkAuth: async () => {
     try {

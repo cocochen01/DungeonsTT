@@ -1,6 +1,6 @@
-import { Home, Settings, Users, Grid, MessageSquare } from "lucide-react";
+import { Grid, MessageSquare, BookUser } from "lucide-react";
 import { useSidebarStore, type RightSidebarPanel } from "../../store/useSidebarStore";
-import { ToolbarButton } from "./ToolbarButton";
+import { ToolbarButton, ToolbarDivider } from "./ToolbarButton";
 import { useChatStore } from "../../store/useChatStore";
 
 const RightSideToolBar = () => {
@@ -13,11 +13,11 @@ const RightSideToolBar = () => {
   };
   return (
     <div className="h-full flex flex-col items-center gap-2 py-4 border-r border-base-300">
-      <ToolbarButton icon={Grid} label="Grid"/>
+      <ToolbarButton icon={BookUser} label="Journal" onClick={() => handleButton("journal")}/>
       <ToolbarButton icon={MessageSquare} label="Chat" onClick={() => handleButton("chat")}/>
-      <ToolbarButton icon={Home} label="Home" />
-      <ToolbarButton icon={Users} label="Users" />
-      <ToolbarButton icon={Settings} label="Settings" onClick={() => { if (rightActivePanel !== "settings") setRightActivePanel("settings");}}/>
+      <ToolbarDivider/>
+      {/**GameMaster */}
+      <ToolbarButton icon={Grid} label="Grid" onClick={() => handleButton("grid")}/>
     </div>
   );
 };
